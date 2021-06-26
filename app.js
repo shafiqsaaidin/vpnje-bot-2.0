@@ -438,8 +438,9 @@ bot.onText(/\/v2_info (.+)/, (msg, match) => {
         
                     bot.sendMessage(chatId, '## V2ray user info ## \n'
                             + 'Username: ' + row.user_name + '\n'
-                            + 'Protocol: ' + row.protocol + '\n'
+                            + 'User UUID: ' + row.user_uuid + '\n'
                             + 'Server Name: ' + row.server_name + '\n'
+                            + 'Protocol: ' + row.server_protocol + '\n'
                             + 'Start Date: ' + moment(row.user_start_date).format("YYYY-MM-DD") + '\n'
                             + 'Expired Date: ' + moment(row.user_end_date).format("YYYY-MM-DD"));
                 });
