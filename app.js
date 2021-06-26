@@ -298,9 +298,9 @@ bot.onText(/\/wg_info (.+)/, (msg, match) => {
         
                     bot.sendMessage(chatId, '## Wireguard user info ## \n'
                             + 'Username: ' + row.user_name + '\n'
+                            + 'Server Name: ' + row.server_name + '\n'
                             + 'Start Date: ' + moment(row.user_start_date).format("YYYY-MM-DD") + '\n'
-                            + 'Expired Date: ' + moment(row.user_end_date).format("YYYY-MM-DD") + '\n'
-                            + 'Server: ' + row.server_name);
+                            + 'Expired Date: ' + moment(row.user_end_date).format("YYYY-MM-DD"));
                 });
             }
         
@@ -311,11 +311,13 @@ bot.onText(/\/wg_info (.+)/, (msg, match) => {
 });
 
 // Register new user
-bot.onText(/\/wg_add (.+) (.+)/, (msg, match) => {
+bot.onText(/\/wg_add (.+) (.+) (.+)/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
 
     let userName = match[1];
     let day = match[2];
+    let srvName = match[3];
+
     let today = moment().format("YYYY-MM-DD");
     let expired = moment().add(day, 'days').format("YYYY-MM-DD");
 
@@ -327,14 +329,15 @@ bot.onText(/\/wg_add (.+) (.+)/, (msg, match) => {
     
             if (result.length === 0) {
                 conn.query({
-                    sql: "INSERT INTO wireguard (user_name, user_start_date, user_end_date) VALUES (?, ?, ?)",
-                    values: [userName, today, expired]
+                    sql: "INSERT INTO wireguard (user_name, server_name, user_start_date, user_end_date) VALUES (?, ?, ?, ?)",
+                    values: [userName, srvName, today, expired]
                 }, (err, result) => {
                     if (err) throw err;
                     // console.log(result);
                 
                     bot.sendMessage(chatId, '## Wireguard register success ## \n'
                                 + 'Username: ' + userName + '\n'
+                                + 'Server Name: ' + srvName + '\n'
                                 + 'Start Date: ' + today + '\n'
                                 + 'Expired Date: ' + expired + '\n'
                                 + 'Support Group: ' + process.env.GROUP);
@@ -375,7 +378,6 @@ bot.onText(/\/wg_renew (.+) (.+)/, (msg, match) => {
         
                 });
                 
-
                 conn.query("UPDATE wireguard SET user_start_date = ?, user_end_date = ? WHERE user_name = ?", [today, expired, userName], (err, result) => {
                     if (err) throw err;
             
@@ -383,9 +385,9 @@ bot.onText(/\/wg_renew (.+) (.+)/, (msg, match) => {
                 
                     bot.sendMessage(chatId, '## Wireguard renew success ## \n'
                                 + 'Username: ' + userName + '\n'
+                                + 'Server Name: ' + srvName + '\n'
                                 + 'Start Date: ' + today + '\n'
                                 + 'Expired Date: ' + expired + '\n'
-                                + 'Server: ' + srvName + '\n'
                                 + 'Support Group: ' + process.env.GROUP);
                 });
             }
@@ -436,6 +438,8 @@ bot.onText(/\/v2_info (.+)/, (msg, match) => {
         
                     bot.sendMessage(chatId, '## V2ray user info ## \n'
                             + 'Username: ' + row.user_name + '\n'
+                            + 'Protocol: ' + row.protocol + '\n'
+                            + 'Server Name: ' + row.server_name + '\n'
                             + 'Start Date: ' + moment(row.user_start_date).format("YYYY-MM-DD") + '\n'
                             + 'Expired Date: ' + moment(row.user_end_date).format("YYYY-MM-DD"));
                 });
@@ -448,11 +452,13 @@ bot.onText(/\/v2_info (.+)/, (msg, match) => {
 });
 
 // Register new user
-bot.onText(/\/v2_add (.+) (.+)/, (msg, match) => {
+bot.onText(/\/v2_add (.+) (.+) (.+)/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
 
     let userName = match[1];
     let day = match[2];
+    let srvName = match[3];
+
     let today = moment().format("YYYY-MM-DD");
     let expired = moment().add(day, 'days').format("YYYY-MM-DD");
 
@@ -464,14 +470,15 @@ bot.onText(/\/v2_add (.+) (.+)/, (msg, match) => {
     
             if (result.length === 0) {
                 conn.query({
-                    sql: "INSERT INTO v2ray (user_name, user_start_date, user_end_date) VALUES (?, ?, ?)",
-                    values: [userName, today, expired]
+                    sql: "INSERT INTO v2ray (user_name, server_name, user_start_date, user_end_date) VALUES (?, ?, ?, ?)",
+                    values: [userName, srvName, today, expired]
                 }, (err, result) => {
                     if (err) throw err;
                     // console.log(result);
                 
                     bot.sendMessage(chatId, '## V2ray Register success ## \n'
                                 + 'Username: ' + userName + '\n'
+                                + 'Server Name: ' + srvName + '\n'
                                 + 'Start Date: ' + today + '\n'
                                 + 'Expired Date: ' + expired + '\n'
                                 + 'Support Group: ' + process.env.GROUP);
@@ -503,6 +510,14 @@ bot.onText(/\/v2_renew (.+) (.+)/, (msg, match) => {
             if (result.length === 0) {
                 bot.sendMessage(chatId, "Username not exist");
             } else {
+                let srvName = ''
+
+                Object.keys(result).forEach((key) => {
+                    let row = result[key];
+                    srvName = row.server_name;
+        
+                });
+
                 conn.query("UPDATE v2ray SET user_start_date = ?, user_end_date = ? WHERE user_name = ?", [today, expired, userName], (err, result) => {
                     if (err) throw err;
             
@@ -510,6 +525,7 @@ bot.onText(/\/v2_renew (.+) (.+)/, (msg, match) => {
                 
                     bot.sendMessage(chatId, '## V2ray renew success ## \n'
                                 + 'Username: ' + userName + '\n'
+                                + 'Server Name: ' + srvName + '\n'
                                 + 'Start Date: ' + today + '\n'
                                 + 'Expired Date: ' + expired + '\n'
                                 + 'Support Group: ' + process.env.GROUP);
@@ -562,6 +578,7 @@ bot.onText(/\/tr_info (.+)/, (msg, match) => {
         
                     bot.sendMessage(chatId, '## Trojan user info ## \n'
                             + 'Username: ' + row.user_name + '\n'
+                            + 'Server Name: ' + row.server_name + '\n'
                             + 'Start Date: ' + moment(row.user_start_date).format("YYYY-MM-DD") + '\n'
                             + 'Expired Date: ' + moment(row.user_end_date).format("YYYY-MM-DD"));
                 });
@@ -574,12 +591,14 @@ bot.onText(/\/tr_info (.+)/, (msg, match) => {
 });
 
 // Register new user
-bot.onText(/\/tr_add (.+) (.+)/, (msg, match) => {
+bot.onText(/\/tr_add (.+) (.+) (.+)/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
 
     let userName = match[1];
     let day = match[2];
-    let link = `https://api.vpnje.com/tr01/${userName}`;
+    let srvName = match[3];
+
+    let link = `https://api.vpnje.com/trojan/${srvName}/${userName}`;
     let today = moment().format("YYYY-MM-DD");
     let expired = moment().add(day, 'days').format("YYYY-MM-DD");
 
@@ -591,14 +610,15 @@ bot.onText(/\/tr_add (.+) (.+)/, (msg, match) => {
     
             if (result.length === 0) {
                 conn.query({
-                    sql: "INSERT INTO trojan (user_name, user_start_date, user_end_date) VALUES (?, ?, ?)",
-                    values: [userName, today, expired]
+                    sql: "INSERT INTO trojan (user_name, server_name, user_start_date, user_end_date) VALUES (?, ?, ?, ?)",
+                    values: [userName, srvName, today, expired]
                 }, (err, result) => {
                     if (err) throw err;
                     // console.log(result);
 
                     bot.sendMessage(chatId, '## Trojan registration success ## \n'
                     + 'Username: ' + userName + '\n'
+                    + 'Server Name: ' + srvName + '\n'
                     + 'Start Date: ' + today + '\n'
                     + 'Expired Date: ' + expired + '\n'
                     + 'Support Group: ' + process.env.GROUP);
@@ -633,6 +653,14 @@ bot.onText(/\/tr_renew (.+) (.+)/, (msg, match) => {
             if (result.length === 0) {
                 bot.sendMessage(chatId, "user not exist.");
             } else {
+                // Get server name from last query
+                let srvName = ''
+                Object.keys(result).forEach((key) => {
+                    let row = result[key];
+                    srvName = row.server_name;
+        
+                });
+
                 conn.query("UPDATE trojan SET user_start_date = ?, user_end_date = ? WHERE user_name = ?", [today, expired, userName], (err, result) => {
                     if (err) throw err;
             
@@ -640,6 +668,7 @@ bot.onText(/\/tr_renew (.+) (.+)/, (msg, match) => {
                 
                     bot.sendMessage(chatId, '## Trojan id renew success ## \n'
                                 + 'Username: ' + userName + '\n'
+                                + 'Server Name: ' + srvName + '\n'
                                 + 'Start Date: ' + today + '\n'
                                 + 'Expired Date: ' + expired + '\n'
                                 + 'Support Group: ' + process.env.GROUP);
