@@ -10,14 +10,19 @@
 /ovpn_block_test
 
 /wg_info <username>
-/wg_add <username> <days>
+/wg_add <username> <days> <srvname>
 /wg_renew <username> <days>
 /wg_del <username>
 
 /v2_info <username>
-/v2_add <username> <days>
+/v2_add <username> <days> <srvname>
 /v2_renew <username> <days>
 /v2_del <username>
+
+/tr_info <username>
+/tr_add <username> <days> <srvname>
+/tr_renew <username> <days>
+/tr_del <username>
 
 ## example ##
 /ovpn_info test
