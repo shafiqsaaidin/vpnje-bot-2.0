@@ -419,7 +419,7 @@ bot.onText(/\/wg_del (.+)/, (msg, match) => {
 
 // V2ray
 // Get user info
-bot.onText(/\/v2_info (.+)/, (msg, match) => {
+bot.onText(/\/vr_info (.+)/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
 
     let userName = match[1];
@@ -453,7 +453,7 @@ bot.onText(/\/v2_info (.+)/, (msg, match) => {
 });
 
 // Register new user
-bot.onText(/\/v2_add (.+) (.+) (.+)/, (msg, match) => {
+bot.onText(/\/vr_add (.+) (.+) (.+)/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
 
     let userName = match[1];
@@ -494,7 +494,7 @@ bot.onText(/\/v2_add (.+) (.+) (.+)/, (msg, match) => {
 });
 
 // Renew user
-bot.onText(/\/v2_renew (.+) (.+)/, (msg, match) => {
+bot.onText(/\/vr_renew (.+) (.+)/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
 
     let userName = match[1];
@@ -539,7 +539,7 @@ bot.onText(/\/v2_renew (.+) (.+)/, (msg, match) => {
 });
 
 // Delete user
-bot.onText(/\/v2_del (.+)/, (msg, match) => {
+bot.onText(/\/vr_del (.+)/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
 
     let userName = match[1];
