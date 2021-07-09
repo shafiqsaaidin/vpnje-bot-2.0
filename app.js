@@ -636,6 +636,18 @@ bot.onText(/\/tr_add (.+) (.+) (.+)/, (msg, match) => {
     }
 });
 
+// Generate api link
+bot.onText(/\/tr_gen (.+) (.+)/, (msg, match) => {
+    const chatId = process.env.ADMIN_GROUP;
+
+    let userName = match[1];
+    let srvName = match[2];
+    let link = process.env.VPNJE_API+`trojan/${srvName}/${userName}`;
+
+    bot.sendMessage(chatId, link);
+
+});
+
 // Renew user
 bot.onText(/\/tr_renew (.+) (.+)/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
