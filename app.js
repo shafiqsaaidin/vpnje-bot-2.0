@@ -493,6 +493,38 @@ bot.onText(/\/vr_add (.+) (.+) (.+)/, (msg, match) => {
     }
 });
 
+// Generate api link
+bot.onText(/\/vr_gen (.+)/, (msg, match) => {
+    const chatId = process.env.ADMIN_GROUP;
+
+    let userName = match[1];
+
+    try {
+        conn.query("SELECT user_uuid, server_name FROM v2ray WHERE user_name = ?", [userName], (err, result) => {
+            if (err) throw err;
+    
+            // console.log(result);
+    
+            if (result.length === 0) {
+                bot.sendMessage(chatId, "user not exist!");
+            } else {
+                Object.keys(result).forEach((key) => {
+                    let row = result[key];
+
+                    let link = process.env.VPNJE_API+`v2ray/${row.server_name}/${row.user_uuid}`;
+
+                    bot.sendMessage(chatId, link);
+                });
+            }
+        
+        });
+    } catch (error) {
+        console.log(error);
+    }
+
+});
+
+
 // Renew user
 bot.onText(/\/vr_renew (.+) (.+)/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
