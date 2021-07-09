@@ -599,7 +599,7 @@ bot.onText(/\/tr_add (.+) (.+) (.+)/, (msg, match) => {
     let day = match[2];
     let srvName = match[3];
 
-    let link = `https://api.vpnje.com/trojan/${srvName}/${userName}`;
+    let link = process.env.VPNJE_API+`trojan/${srvName}/${userName}`;
     let today = moment().format("YYYY-MM-DD");
     let expired = moment().add(day, 'days').format("YYYY-MM-DD");
 
