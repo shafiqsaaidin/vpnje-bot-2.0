@@ -14,13 +14,15 @@
 /wg_renew <username> <days>
 /wg_del <username>
 
-/v2_info <username>
-/v2_add <username> <days> <srvname>
-/v2_renew <username> <days>
-/v2_del <username>
+/vr_info <username>
+/vr_add <username> <days> <srvname>
+/vr_gen <username>
+/vr_renew <username> <days>
+/vr_del <username>
 
 /tr_info <username>
 /tr_add <username> <days> <srvname>
+/tr_gen <username> <srvname>
 /tr_renew <username> <days>
 /tr_del <username>
 
