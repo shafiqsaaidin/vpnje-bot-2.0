@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const moment = require('moment');
+const { v4: uuidv4 } = require('uuid')
 const TelegramBot = require('node-telegram-bot-api');
 
 require('dotenv').config({path: __dirname + '/.env'});
@@ -459,6 +460,9 @@ bot.onText(/\/vr_add (.+) (.+) (.+)/, (msg, match) => {
     let userName = match[1];
     let day = match[2];
     let srvName = match[3];
+    let srvProto = 'vless'
+    let userUuid = uuidv4();
+    let link = process.env.VPNJE_API+`v2ray/${srvName}/${userUuid}`;
 
     let today = moment().format("YYYY-MM-DD");
     let expired = moment().add(day, 'days').format("YYYY-MM-DD");
@@ -471,18 +475,22 @@ bot.onText(/\/vr_add (.+) (.+) (.+)/, (msg, match) => {
     
             if (result.length === 0) {
                 conn.query({
-                    sql: "INSERT INTO v2ray (user_name, server_name, user_start_date, user_end_date) VALUES (?, ?, ?, ?)",
-                    values: [userName, srvName, today, expired]
+                    sql: "INSERT INTO v2ray (user_name, user_uuid, server_name, server_protocol, user_start_date, user_end_date) VALUES (?, ?, ?, ?, ?, ?)",
+                    values: [userName, userUuid, srvName, srvProto, today, expired]
                 }, (err, result) => {
                     if (err) throw err;
                     // console.log(result);
                 
                     bot.sendMessage(chatId, '## V2ray Register success ## \n'
                                 + 'Username: ' + userName + '\n'
+                                + 'User UUID: ' + userUuid + '\n'
                                 + 'Server Name: ' + srvName + '\n'
+                                + 'ID Type: ' + srvProto + '\n'
                                 + 'Start Date: ' + today + '\n'
                                 + 'Expired Date: ' + expired + '\n'
                                 + 'Support Group: ' + process.env.GROUP);
+
+                    bot.sendMessage(chatId, link);
                 });
             } else {
                 bot.sendMessage(chatId, "Username exist");
