@@ -453,6 +453,35 @@ bot.onText(/\/vr_info (.+)/, (msg, match) => {
     }
 });
 
+// Get server status
+bot.onText(/\/vr_stat (.+)/, (msg, match) => {
+    const chatId = process.env.ADMIN_GROUP;
+
+    let srvName = match[1];
+
+    try {
+        conn.query("SELECT COUNT(user_id) as total FROM v2ray where user_end_date < curdate() AND server_name = ?", [srvName], (err, result) => {
+            if (err) throw err;
+    
+            // console.log(result);
+    
+            if (result.length === 0) {
+                bot.sendMessage(chatId, "Wrong server name");
+            } else {
+                Object.keys(result).forEach((key) => {
+                    let row = result[key];
+        
+                    bot.sendMessage(chatId, `## V2ray ${srvName} server info ## \n`
+                            + 'Total Active User: ' + row.total);
+                });
+            }
+        
+        });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 // Register new user
 bot.onText(/\/vr_add (.+) (.+) (.+)/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
