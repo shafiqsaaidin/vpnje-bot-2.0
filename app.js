@@ -460,7 +460,7 @@ bot.onText(/\/vr_stat (.+)/, (msg, match) => {
     let srvName = match[1];
 
     try {
-        conn.query("SELECT COUNT(user_id) as total FROM v2ray where user_end_date < curdate() AND server_name = ?", [srvName], (err, result) => {
+        conn.query("SELECT COUNT(user_id) as total FROM v2ray where user_end_date > curdate() AND server_name = ?", [srvName], (err, result) => {
             if (err) throw err;
     
             // console.log(result);
