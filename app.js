@@ -454,27 +454,16 @@ bot.onText(/\/vr_info (.+)/, (msg, match) => {
 });
 
 // Get server status
-bot.onText(/\/vr_stat (.+)/, (msg, match) => {
+bot.onText(/\/vr_stat/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
 
-    let srvName = match[1];
-
     try {
-        conn.query("SELECT COUNT(user_id) as total FROM v2ray where user_end_date > curdate() AND server_name = ?", [srvName], (err, result) => {
+        conn.query("SELECT server_name as Server, COUNT(user_id) AS Total FROM v2ray WHERE user_end_date > CURDATE() GROUP BY server_name", (err, result) => {
             if (err) throw err;
-    
-            // console.log(result);
-    
-            if (result.length === 0) {
-                bot.sendMessage(chatId, "Wrong server name");
-            } else {
-                Object.keys(result).forEach((key) => {
-                    let row = result[key];
-        
-                    bot.sendMessage(chatId, `## V2ray ${srvName} server info ## \n`
-                            + 'Total Active User: ' + row.total);
-                });
-            }
+
+            jsonData = JSON.stringify(result)
+
+            bot.sendMessage(chatId, jsonData)
         
         });
     } catch (error) {
