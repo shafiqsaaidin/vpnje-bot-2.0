@@ -458,7 +458,7 @@ bot.onText(/\/vr_stat/, (msg, match) => {
     const chatId = process.env.ADMIN_GROUP;
 
     try {
-        conn.query("SELECT server_name as Server, COUNT(user_id) AS Total FROM v2ray WHERE user_end_date > CURDATE() GROUP BY server_name", (err, result) => {
+        conn.query("SELECT server_name as Server, COUNT(user_id) AS Total FROM v2ray WHERE user_end_date >= CURDATE() GROUP BY server_name", (err, result) => {
             if (err) throw err;
 
             jsonData = JSON.stringify(result)
